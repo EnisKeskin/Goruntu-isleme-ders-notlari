@@ -601,3 +601,762 @@ yüksek frekanslı (keskin hatlar) ön plana çıkar
 - Bir görüntü Laplace filtresi ile konvolüsyon yapılır ve orijinal görüntüden çıkartılırsa keskinleştirme operatörü elde edilir.
 
 <center><image src="./image/keskinlestirme.jpg" width="400"></image></center>
+
+# BÖLÜTLEME YÖNTEMLERİ
+
+- Bölütleme, **görüntüyü birbirine benzer alt bölgelere
+  ayırma işlemidir.** Bir diğer bakış açısıyla görüntü verisinin
+  bileşenler cinsinden daha özet bir şekilde sunulmasını
+  sağlamaktır.
+- Bu bakış açısıyla bakacak olursak görüntüyü anlamlandırmak ve **bize gereken bilgiyi görüntüden elde etmek için kullanılabilecek temel bir görüntü işleme başlığıdır denilebilir.**
+
+## Bölütleme Kavramı
+
+- Bölütleme kavramı oldukça büyük bir alanı kapsamaktadır.
+  Temel olarak bölütlemede çıkarılması** istenen görüntü
+  bileşenlerinin ortak bir görsel niteliğe sahip olması** gerektiği
+  varsayılmaktadır.
+
+- Görüntüde birbirine benzer pikseller, nesneler, dokular
+  ayrıştırılarak birbirleriyle de bölgesel olarak **‘alakalı’** bölüt
+  parçaları oluşturulabilir.
+
+- Bölütleme, tıbbi görüntülemede, biyometrik tanımada, makine
+  görmesi uygulamalarında, güvenlik amacıyla kişi takibi, yüz
+  tanıma, uzaktan algılamada farklı maddelerin tespiti gibi
+  uygulamalarda kullanılmaktadır.
+
+## EşiklemeTabanlı Bölütleme - Görüntü Eşikleme
+
+- Bir görüntüden, belli bir değere göre ikili resim elde edilmesi işlemidir
+- Bu değere **Eşik değeri** denir
+- Bir piksel eşik değerinden büyük ise 1, küçük ise 0 değeri yazılır.
+- Böylece ikili resim elde edilmiş olur.
+
+## Eşikleme Tabanlı Bölütleme
+
+- Eşikleme yöntemi ile bölütlemede, gri seviye görüntülerin
+  piksel seviyelerinin belli bir eşik değerin altında veya
+  üstünde olmasına göre ikili (binary) olarak karar verilerek
+  ikili görüntüler oluşturulur.
+- Ayrıca birden fazla, Nth adet eşik seviyesinin belirlenmesi
+  durumunda görüntü toplam Nth + 1 farklı bölüte ayrılır.
+- Eşik seviyesinin belirlenmesinde k-ortalamalar, bulanık cortalamalar gibi kümeleme yöntemlerinin yanı sıra Otsu
+  yöntemi, maksimum entropi yöntemi v.b. yöntemler
+  yaygın olarak kullanılmaktadır.
+
+## Görüntü Eşikleme (Image Tresholding)
+
+- Eşikleme yada ikili tonlama gri tonlanmış bir resmin siyah-beyaz (ikili) uzaya dönüştürülmesi işlemidir.
+- Siyah-beyaz görüntüler, görüntü üzerindeki renklerin pek önemli olmadığı, görüntü üzerinde belirli şekillerin veya dizilerin arandığı uygulamalarda işlem yükünü hafifletmek ve görüntü üzerinde mantıksal (0-1) işlemleri hızlı bir şekilde yapabilmek için sıklıkla kullanılan görüntülerdir.
+- Basitçe gri seviye bir görüntü üzerinde 0-255 arasında seçilen bir T eşik değerine göre,siyah-beyaz resim aşağıdaki şekilde oluşturulur.
+
+<center><image src="./image/teml.png" width="400"></image></center>
+
+## Görüntü Eşikleme (Image Tresholding)
+
+- Burada T değerinin doğru seçilmesi kritik önem
+  taşımaktadır.
+- Eğer T değeri çok büyük seçilirse
+  oluşturulacak yeni görüntüde pek çok piksel beyaz (1),
+  küçük seçilirse de siyah (0) olacağından görüntünün
+  içerdiği bilgi ciddi miktarda azalacaktır.
+- Birkaç resim için
+  ideal eşik değeri deneme yoluyla bulunabilse de farklı ışık
+  ortamlarında çekilmiş çok sayıda görüntü için bu söz
+  konusu olamaz.
+- Bu nedenle girdi resmine karşılık eşik
+  değerini otomatik olarak hesaplayan bir algoritma
+  gerekmektedir.
+
+## Otsu ile Adaptif Eşikleme
+
+- Otsu metodu ile eşik değeri görüntü üzerinden
+  hesaplanmaktadır.
+- Metod, görüntü üzerinde iki ayrı sınıf (plan) olduğunu
+  kabul ederek, bu iki sınıf arasındaki varyansı
+  maksimum yapacak değeri bulmaya çalışır
+- Varyans bir dizinin elemanlarının dizinin ortalamasına
+  olan uzaklıklarının karelerinin ortalamasıdır. Bu değere
+  bakarak dizi içerisindeki değerlerin ortalamaya ne
+  derece yakın olduğu görülebilir.
+
+## Otsu ile Adaptif Eşikleme
+
+- N uzunluklu bir dizi için varyans,
+<center><image src="./image/otsu.jpg" width="400"></image></center>
+
+- Sınıflar arası varyans(siyah-beyaz sınıfları) aşağıdaki formül ile bulunur.
+-
+
+<center><image src="./image/otsu1.jpg" width="400"></image></center>
+
+- Burada w değişkenleri sınıf yoğunluklarını, µ değişkenleri ise ağırlıklı sınıf
+  ortalamalarını göstermektedir. i renk değerini, p(i) ise o rengin olasılığını ifade
+  etmektedir. L ise max renk değeridir.
+
+<center><image src="./image/otsu2.jpg" width="400"></image></center>
+
+- t=0 ilk değer ile başlayarak 255 e kadar her değer için sınıflar arası varyansı
+  hesaplamakta ve en son maksimum varyans değerini veren t değerini T (eşik
+  değeri) olarak belirlenmektedir
+
+- İkinci resim T=75 eşik değeri ile eşiklendiğinden yüz
+  kısmında bulunan pek çok veri kaybolmuş, üçüncü resim
+  yüksek bir eşik değeri T=180 ile eşiklendiğinden
+  neredeyse tüm bilgiler kaybolmuştur. Son resim ise
+  adaptif eşik değeri bulunarak T=115 eşiklenmiştir ve
+  resim üzerindeki pek çok bilgi korunmuştur.
+
+## Kenar Belirleme Tabanlı Bölütleme
+
+- Bir görüntüde bölütlenmek istenen farklı nesnelere ait kenarlar
+  bölüt sınırlarının oluşturulmasında kullanılabilir.
+- Bir nesneden diğer
+  bir nesneye geçerken veya bir nesne ile arka plan geçişleri arasında
+  keskin geçişler oluşur.
+- Kenar belirleme algoritmaları ile kenarlar
+  belirlendikten sonra üç işlemin gerçekleştirilmesi gerekmektedir:
+- Kenarlarda oluşan kopuklukların giderilmesi
+- Hangi kenarların bölüt sınırlarını oluşturduğuna karar verilmesi
+- Aşırı kenar oluşması durumunda (nesnelerin yüzeylerinin benzeşik
+  (homogenous) olmaması durumunda) gerçek sınır kenarlarının tespiti.
+- Ayrıca bölütlenmek istenen **nesnenin şekil özelliklerine** göre çizgi
+  veya yuvarlak yapıların bulunabilmesi için **Hough**, yönlendirilmiş
+  **Sobel** ve **Leavers** dönüşümü gibi çeşitli dönüşüm yöntemlerinden de
+  yararlanılır.
+
+## Histogram Tabanlı Bölütleme
+
+- Histogram tabanlı yöntemlerde görüntüdeki tüm pikseller hesaba katılarak
+  oluşturulan histogramda bulunan vadi ve tepelerden yararlanılarak oluşturulacak
+  olan bölüt sayısı ve sınırları belirlenir.
+- Görüntünün parlaklık veya renk histogramları
+  ayrı ayrı değerlendirilerek bölütlerin oluşturulması sağlanır
+- Bu noktada oluşturulan histogramda ‘mod analizinin’ iyi bir şekilde
+  gerçekleştirilmesi gerekir.
+- Daha alt bölütlerin bulunmaması veya görüntüdeki
+  bölütlerin daha az olması istendiğinde histogram analiz algoritmasınının
+  parametrelerinin daha ince veya kaba bir biçimde ayarlanarak istenilen sonuçların
+  elde edilmesine çalışılır.
+- Özellikle belirgin tepe ve vadi noktalarının oluşmaması durumunda bölütleme
+  başarısı bundan olumsuz olarak etkilenebilir.
+- Bu olumsuzlukları giderebilmek için
+  istatistik özelliklerini de içeren ardışıl histogram analiz algoritmaları kullanılır
+
+## Bölge Büyütme Tabanlı Bölütleme
+
+- Görüntüdeki piksellerin ve bölgelerin daha önceden belirlenmiş bir koşula
+  bağlı olarak gruplandırarak bölütlerin oluşturulduğu yöntemi bölge
+  büyütme tabanlı bölütleme yöntemi olarak adlandırılır.
+- Temel olarak görüntü içinden rastgele veya önceden belirlenerek seçilen
+  çekirdek (seed) noktaların çevresindeki komşu pikseller belirli bir benzerlik
+  ölçütüne göre gruplanarak, giderek yayılan bir şekilde yinelemeli olarak
+  bölütler oluşturulur.
+- Benzerlik koşulunun belirlenmesinde ele alınan
+  problemin tipi ve yapısı oldukça önem kazanır.
+- Bölütleme başarımı seçilen
+  başlangıç çekirdeklerinin seçimine bağımlıdır.
+- Gürültü ve dengesiz çekirdek
+  seçimi bölütleme sonucunu olumsuz etkiler.
+  Çekirdeksiz bölge büyütme algoritmasında ise çekirdeklerin açıkça
+  seçilmesine gerek yoktur.
+- Başlangıç olarak tek bir bölge veya pikselle
+  bölütleme işlemine başlanarak her bir yinelemeli adımda komşu bölge veya
+  piksellerin benzerliğini değerlendirir.
+- Seçilen bir eşik değeri yardımıyla
+  değerlendirilen bölge veya pikselin var olan bölgeye eklenip eklenmeyeceği
+  veya yeni bir bölüt etiketi oluşturulup oluşturulmayacağına karar verilir.
+
+## Bölme ve Birleştirme Tabanlı Bölütleme
+
+- Bölge büyütme tabanlı görüntü bölütleme yönteminin tersine
+  görüntü keyfi olarak keyfi ve bağlantısız alt bölgelere ayrıştırılır; daha
+  sonrasında belirlenen bölütleme koşullarına bağlı olarak bu alt
+  bölgeler birbirleriyle birleştirilerek veya bölünerek bölütleme
+  haritası oluşturulmaya çalışılır.
+- Bu yaklaşımda bütün görüntü bir ağacın kökünde kabul edilerek
+  işleme başlanır.
+- Bu ağaç yapısında belli bir benzerlik koşuluna göre
+  ağaç alt dallara ayrıştırılır.
+- Bu ayrıştırmada amaçlanan, ağacın her bir
+  dalında birbiriyle yüksek oranda ilişkiye sahip, benzer bölgelerin veya
+  piksel gruplarının toplanmasını sağlamaktır.
+- Bu ayrıştırma işlemi
+  yinelemeli olarak devam eder ve belli bir benzeşim değeri
+  yakalandığında ağaç düğümlerinde bölütler oluşturulur.
+
+## Kümeleme Yöntemleri ile Bölütleme
+
+- Görüntü verisindeki benzer, doğal olarak birbirleriyle ilişkili bileşenlerin
+  kümelenmesi mantığıyla bölütleme işlemi gerçekleştirilebilir.
+- Bu durumda kümeleme iki yaklaşımla ele alınır:
+  - Bölümleme (Partitioning): Görüntüyü geniş bir veri kümesi olarak düşündüğümüzde
+    bu kümede ilişkili bileşenleri oluşturacağımız benzerlik modeline göre ayrıştırabiliriz.
+  - Gruplama (Grouping): Görüntüdeki farklı saydığımız veri bileşenlerinin hangilerinin
+    beraberce bir grup içinde yer almasına karar verilerek ‘gruplama’ mantığıyla
+    kümelerimizi (alt bölütlerimizi) oluşturabiliriz.
+- Bölütlemeyi gerçekleştirebilmek amacıyla örüntü tanıma ve makine
+  öğrenmesi kapsamına giren kümeleme algoritmalarından yararlanılması
+  oldukça yaygındır.
+- Çoğu zaman görüntü bölütleme ve kümeleme kavramları iç
+  içe kullanılır.
+- Ama geniş yelpazeden bakacak olursak kümeleme yöntemleri
+  bölütlemede kullandığımız yöntemlerden biridir.
+- Görüntü bölütleme alanında en çok kullanılan eğiticisiz öğrenme yöntemleri
+  olarak k-ortalamalar, bulanık c-ortalamalar, öz-düzenlemeli haritalar,
+  uyarlanabilir rezonans teorisi algoritmalarını sayabiliriz.
+- Bu yöntemlerden en sık kullanılan k-ortalamalar ve bulanık c-ortalamalar algoritmalarını genel hatlarıyla tanıyacak olursak:
+
+## K-Ortalamalar Algoritması
+
+- K-ortalamalar, görüntü işlemede doğal kümeleri yinelemeli
+  olarak bulan bir kümeleme yöntemidir. K-ortalamalar algoritması
+  toplam N pikselden oluşan veri setini kümeye ayırır.
+- Kortalamalar algoritması çok boyutlu örneklerin oluşturduğu
+  vektör uzayında küme içi değişintiyi karesel hata fonksiyonu ile
+  minimize etmeye çalışır.
+  Bu hata fonksiyonunda c , küme sayısını, Si , i = 1,2,3
+  ....,c kümeleri, μi ise Si kümesindeki bütün veri noktalarının
+  ortalamasını yani küme merkezini göstermektedir xj ∈ Si. Küme
+  merkezleri aynı zamanda ‘sentroid (centroid)’ olarak da
+  adlandırılır.
+- K-ortalamalar algoritmasının işlem adımları aşağıdaki
+  gibi özetlenebilir.
+
+- Adım 1. Algoritmanın başlangıcında c küme merkezi rastgele
+  oluşturulur. Veya daha küçük bir veri setinde k-ortalamalar
+  algoritmasının uygulanması sonucu bulunan küme merkezleri başlangıç
+  küme merkezi olarak atanır.
+- Adım 2. Veri setindeki toplam N örneğe L2 normuna göre en yakın
+  mesafede olduğu küme merkezine göre bir küme etiketi atanır.
+- Adım 3. Küme merkezleri sahip olduğu bütün üye veri noktaları
+  yardımıyla tekrar güncellenir.
+- Adım 4. Si kümesine ait j örnek için (xj ∈ Si) şu hesaplamalar yapılır:
+- Burada ny , y. kümeye ait örnek sayısıdır.
+- Eğer ise j. örnek i. kümeden z. kümeye
+  atanır. Her iki küme merkezi tekrar güncellenir.
+- Adım 5. Eğer bir örnek son k. yinelemede Adım 4’te değiştirilmişse
+  Adım 3’e gidilir, diğer durumda sonlandır.
+
+## Model Tabanlı Bölütleme
+
+- Model tabanlı bölütlemede, görüntüde bölütlenmek istenen
+  nesnenin şekil yapısının olasılıksal bir model oluşturduğu
+  düşünülür.
+- Bu modelde ilgilenilen nesnenin tekrarlayan bir
+  biçimi olduğu ve oluşturulan modelin belli kısıtlarla
+  gerçeklenebileceği varsayılır.
+- Model oluşturulurken
+  bölütlenecek nesnelerin istatistiksel değişimleri öğrenilerek
+  önsel (prior) model parametreleri çıkarılır.
+- Model tabanlı bölütleme yöntemlerine en iyi örnekler aktif
+  dış hatlar (active contours) ve şekiller (active shapes); seviyekümeleri (level-sets) ve biçim-değiştiren (deformable)
+  modelleme yöntemleridir
+
+## Çizge Bölümleme Yöntemleri
+
+- Çizge bölümleme (graph partitioning) yönteminde başlangıç
+  olarak bütün görüntü ağırlıklandırılmış ve yönlendirilmemiş
+  bir çizge olarak oluşturulur.
+- Görüntüyü oluşturan pikseller
+  veya bölgeler bu çizgede düğümlerle ilişkilendirilir ve komşu
+  piksel ve bölgeler arasındaki benzerlik ölçütü bu çizgedeki
+  kenar ağırlıklarından yararlanılarak oluşturulur.
+- Bu benzerlik
+  kıstasını en-iyileyen (optimizing) bir model oluşturularak en
+  iyi bölütlerin elde edilmesine çalışılır.
+- Bu bölütleme türünde en iyi bilinen yöntemler olarak,
+  minimum yayılan ağaç tabanlı bölütleme, minimum kesim,
+  normalize kesimler,rasgele yürüyücü algoritmaları sayılabilir.
+
+# GÖRÜNTÜ İŞLEMEDE MORFOLOJİK YÖNTEMLER
+
+- Morfolojik işlemlerde amaç görüntüdeki nesnelerin
+  belirginleştirilmesidir.
+- Görüntüye uygulanması düşünülen kümeleme, özellik çıkarımı,
+  sınıflandırma işlemlerinin başarılı sonuç verebilmesi için morfolojik
+  işlemler büyük öneme sahiptir.
+- **Birbirine değen nesnelerin ayırt edilmesi, önişleme sonucunda
+  parçalı görünen nesnelerin birleştirilmesi, delik ihtiva eden
+  nesnelerin boşluklarının doldurulması gibi işlemler morfoloji başlığı
+  altında toplanmaktadır.**
+- Morfolojik işlemler çoğunlukla ikili görüntülere uygulanmaktadır
+
+## Aşındırma (Erosion)
+
+- Aşındırma işlemi, ikili bir görüntüdeki nesnelerin
+  küçülmesini, daralmasını sağlayan işlemdir.
+- Bu işlem
+  sonrasında görüntüdeki bazı gürültüler yok olur, nesneler
+  arasındaki zayıf bağlantılar kaybolur.
+- Arka plan olarak
+  kabul edilen alan genişler.
+
+## Genişletme (Ditation)
+
+- Genişleme işlemi, aşındırma işleminin aksine nesnelerin
+  büyümesini, genişlemesini sağlayan işlemdir.
+- Görüntüde tek
+  parça olması gereken bir nesne çeşitli işlemler sonucunda
+  parçalı bir görünüme sahip olabilir veya tamamen ayrılabilir.
+- Genişletme işlemi, yapısal elemanın türüne göre
+  parçalanmanın onarılması veya ayrılan parçaların
+  birleştirilmesi işlemini gerçekleştirmektedir.
+
+## Yapısal Elemanlar
+
+- Yapısal elemanlar, bir görüntüye morfolojik işlemlerin
+  uygulanabilmesi için gerekli olan farklı yapı ve boyuta
+  sahip ikili formattaki görüntülerdir.
+- Uygulanacak işlemi
+  yapısal elemanın türü belirler.
+
+<center><image src="./image/yapisaleleman.jpg" width="400"></image></center>
+
+- Morfolojinin temel amacı, daha önceden belirlenmiş bir piksel
+  grubunu görüntü üzerinde gezdirip, ne kadarının uyduğu veya
+  uymadığı durumunu incelemektir.
+- Bunların bir merkez noktası bulunmakta olup, işlenecek resmin her
+  bir pikseli bu noktaya oturtularak işlem yapılmaktadır.
+- Genişleme ile görüntü içerisindeki objeler büyür veya kalınlaşır.
+- Aşınmada ise tam tersi incelme veya büzülme olur.
+- Operatörlerin etkileri yapıtaşı elemanının yapısına veya büyüklüğüne
+  bağlıdır.
+
+<center><image src="./image/gn.jpg" width="400"></image></center>
+
+- Aşınma işleminde, yapıtaşı elemanının görüntü üzerindeki
+  kısım ile tamamen uyuşması durumunda, yapıtaşı
+  elemanının merkez noktası dışındaki yerler arka plan
+  halini alır.
+
+<center><image src="./image/as.jpg" width="400"></image></center>
+
+## Örnek
+
+- Verilen bir görüntü ikili seviyeye dönüştürüldükten sonra görüntü içerisindeki
+  nesnenin konturunu çıkartılır.
+- Kontur çıkartmak için ikili görüntü 1 piksel aşındırıldıktan sonra görüntünün
+  aşındırılmamış ilk halinden bu yeni değeri çıkartılır. Böylece elimizde verilen
+  görüntüye ait yalnızca nesneyi çevreleyen 1 piksel kalınlıkta bir çizgi (kontur) kalır.
+- Yapılan işlem sonucu oluşan görüntüler aşağıdadır. Görüntü üzerinde 3x3 bir yapısal
+  element kullanılarak 1 piksel genişlikte kontur elde edilmiştir.
+
+<center><image src="./image/orn.jpg" width="400"></image></center>
+
+## Açma
+
+- Morfolojik açma işlemi, aşındırmayı takiben genişletme
+  işleminin gerçekleştirilmesi işlemidir.
+- Açma işleminde
+  nesnelerin büyük çapta değişikliğe uğratılmadan ayrılması
+  sağlanmaktadır.
+- A işlenmesi amaçlanan görüntü matrisi
+  B de yapısal eleman olsun.
+- Bu durumda açma işlemiyle A
+matrisindeki gereksiz kısımlar (küçük parçalar) görüntüdeki
+nesneler zarar görmeden giderilmektedir.
+<center><image src="./image/acma.jpg" width="400"></image></center>
+
+## Kapama
+
+- Kapama işlemi, açma işleminin tersine, genişletme işlemini
+  takip eden aşındırma işleminin gerçekleştirilmesi işlemidir.
+- Kapama işleminde birbirinden ayrı olan iki nesnenin
+  büyük değişikliklere uğratılmadan birleştirilmesini
+  sağlamaktır (görüntü içerisindeki ayrık parçalar birbirine
+  yaklaşır).
+
+<center><image src="./image/kapama.jpg" width="400"></image></center>
+
+## İnceltme (Skeleton)
+
+- İnceltme işlemi, verilen bir görüntüdeki nesnelerin
+  yapısında ciddi bir değişiklik meydana getirmeden yapılan
+  inceltme işlemidir.
+- Nesnenin sınır piksellerinin
+  değerlerine bağlı olarak nesnenin sınırlarının
+  inceltilmesidir.
+- Bir diğer adı da iskeletleştirmedir.
+
+## Bağlı Parçalar (Connected Component)
+
+- İkili formattaki bir görüntüde nesneler belirlendikten
+  sonra birbirinden ayrılmayan parçalar 4-komşuluk veya 8-
+  komşuluktan birine göre bağlı ise bağlı parçalar olarak
+  nitelendirilmektedir.
+- Bağlı parçalar genellikle elimine
+  edilmek istenen bölgelerin belirli bir piksel sayısından
+  düşük olması durumunda uygulanması kolaylık sağlayan
+  bir yöntemdir.
+- Bağlantılı bileşen etiketleme siyah-beyaz görüntüler üzerine
+  uygulanan ve birbiri ile komşu olan piksellerin bir grup içerisinde
+  toplamaya yarayan bir işlemdir.
+- Bu gruplama sonucunda, resim üzerindeki her bir grup bir nesneyi
+  temsil edecek şekilde numaralandırılır. Daha sonra da istenen grup
+  numaralı nesne üzerinde kolaylıkla işlem yapılabilir.
+- Bağlantılı bileşen etiketleme algoritması 4-komşuluk ve 8-komşuluk
+  olarak ikiye ayrılır. Burada 8 komşuluk seçilirse çapraz piksellerin de
+  komşu olduğu kabul edilmiş olur. Uygulamalarda genellikle 8-
+  komşuluk tercih edilir
+- Bağlantılı bileşen etiketleme için pek çok algoritma önerilse de
+  sıklıkla kullanılan metot Two-Pass (Çift Geçiş)
+  metodudur.
+- Bu metotta ilk geçişte tüm pikseller tek tek gezilerek
+  şu algoritma işletilir
+
+- Piksel Siyaha Eşit Değilse
+
+  - Pikselin Tüm komşularına (8 adet) bak - Tüm komşular siyah veya beyaz ise bu yeni bir pikseldir, piksele yeni bir etiket ata, diğer piksele geç - Komşulardan en az biri etiketli (siyah veya beyaz değil) ise piksele etiketli komşu / ların en küçük etiketlisini ata,
+  <center><image src="./image/parcali.jpg" width="400"></image></center>
+
+- Görüldüğü gibi ilk geçiş sonrası oluşan şekilde 1 ve 2 numaralı nesneler farklı
+  nesnelermiş gibi görünseler de aslında bağlantılı (aynı) nesnelerdir.
+- İkinci geçiş bunu önlemek için vardır.
+- İkinci geçişte piksellere içerisindeki değerin gösterdiği değer yazılır.
+- Mesela örneğimizde ikinci geçiş sonrası 2 etiketi
+  görülen piksellere tabloya bakılarak (2->1) 1 etiketi yazılır.
+- Böylece tüm bağımlı nesneler aynı etiket ile etiketlenmiş olur.
+
+# GÖRÜNTÜ MORFLEME
+
+- Morfleme kaynak görüntüyü hedef resme düzgün bir
+  şekilde dönüştürecek görüntüler dizisi üretme tekniğidir.
+- Bu teknik hareketli görüntülerde özel efektler
+  oluşturmak için sıkça kullanılmaktadır.
+- Düzgün bir dönüşüm elde etmek için öncelikle her iki
+  görüntüdeki öznitelik noktaları aynı konuma gelecek
+  şekilde görüntüler düzenlenir.
+- Daha sonra düzenlenmiş görüntülerdeki renk değerleri
+  görüntülere ait katsayılara göre birleştirilir.
+- Morfleme tekniğinden görsel efektlerden başka ortalama yüzlerin
+  elde edilmesinde, biyometride, animasyonlarda, birçok farklı
+  amaç için faydalanılmaktadır (Wolberg 1990, Wolberg 2003, Lee
+  2002, Beier 1992, Smithe 1990). Bu uygulamalarda 3 boyutlu
+  yapının modellenmesi ile görünüş morfleme (Seitz 1996, Xiao
+  2004), şekil morfleme (Alexa 2000, Yang 2009, Knag 2010), ifade
+  morfleme (Fu 2004) ve harita morfleme (Reilly 2004, Nöllenburg 2008 gerçekleştirilmiştir. Diğer yandan ön-eğriltme (PreWarping)
+  dönüşüm tekniği ile resimlerin bakış açısı
+  değiştirilebilmektedir
+
+- Morfleme, bir resmin diğer bir resme kademeli olarak
+  dönüşümünü veya iki resmin çeşitli oranlarda birleştirilmesini
+  ifade eder.
+- Bir resmin diğerine dönüştürülmesi sırasında bu teknik, bir dizi
+  görüntünün oluşmasını sağlar.
+- Morfleme işlemi ilerledikçe birinci resim kaybolurken 2. resim
+  görünmeye başlar. Bu nedenle oluşan görüntü dizisinin ilk
+  yarısındaki görüntüler birinci resme, ikinci yarısındaki görüntüler
+  ise ikinci resme daha çok benzemektedir.
+- Görüntü dizisinin ortasındaki resim ise 1. ve 2. resmin
+  ortalamasıdır
+
+- Bir resmin diğer bir resme morfleme tekniği ile dönüştürülebilmesi
+  için bazı kontrol noktalarının belirlenmesi gerekmektedir.
+- Örneğin yüz görüntüleri için kontrol noktaları, yüzün
+  şekillenmesinde belirleyici olan göz, kaş, burun, ağız vb.
+  pozisyonlarıdır.
+- Bu öznitelik noktaları kullanılarak görüntüler bölgelere
+  parçalanmakta ve bu bölgeler üzerinde geometrik dönüşümler
+  gerçekleştirilmektedir.
+- Elde edilecek sonuç resminin kalitesi, alınan kontrol noktalarının
+  sayısına bağlı olarak artmaktadır. Fakat nokta sayısının artışı bölge
+  sayısını da artırdığından sistem performansını düşürecektir
+
+- Örnekte, yüz görüntüleri üzerinde morfleme
+  gerçekleştirilirken gözbebekleri (2), burun (1), ağız
+  kenarları (2) ve yüz çevresini belirleyen 6 nokta olmak
+  üzere toplam 11 kontrol noktası kullanılmaktadır. Bu
+  noktalar kullanılarak yüz görüntüsü 14 üçgensel, 5
+  dörtgensel bölgeye ayrılmıştır.
+- Kaynak resimlerdeki kontrol noktalarının pozisyonları
+  birbirinden farklı olduğu için, resimler arasında morfleme
+  yapılırken, özellik noktalarını karışım yüzdesine göre aynı
+  pozisyona getirmek amacıyla resimler eğritilmelidir
+  (warping).
+- Birbirine karşılık gelen üçgensel ve dörtgensel bölgelerin
+  tanımlanmasından sonra, morfleme işlemi geometrik
+  transformasyon problemine dönüşmektedir.
+- Bu amaçla üçgensel ve dörtgensel bölgeler için sırasıyla
+  afin ve bilineer dönüşümler kullanılmaktadır.
+
+## Geometrik Dönüşümler
+
+- Kontrol noktaları belirlenmiş ve bu noktalara bağlı olarak
+bölgelere ayrılmış iki resim için ara bir resim üretmek için
+resim ağırlıkları sırasıyla (alfa) ve (1-(alfa)) olarak belirlenir.
+Birinci kaynak resimdeki A ve ikinci resimde bu noktaya
+karşılık gelen B noktası ise, yeni özellik noktası F’yi
+üretmek için lineer interpolasyon aşağıdaki gibidir.
+
+  <center><image src="./image/geo.jpg" width="400"></image></center>
+
+- Bu şekilde her iki kaynak resmin özellik noktalarının
+  interpolasyonu ile üretilen yeni özellik noktaları resimleri
+  orijinal bölgelerinden farklı bölgelere ayırmaktadır.
+- Buradaki amaç her iki kaynak resmindeki orijinal bölgeleri
+  bu yeni bölgelere dönüştürmektir.
+- Böylece her iki kaynak resmi aynı bölgelere sahip
+  olacaktır ve iki resmin (alfa) ve (1-(alfa)) ağırlıklarına göre
+  birleştirilmesi mümkün hale gelecektir
+
+# NESNE TANIMA
+
+- Görüntü içinde belirli nesnelerin veya örüntülerin
+  bulunması için birçok örüntü tanıma ve makine
+  öğrenmesi yönteminden yararlanılır.
+- Özellikle tıp, uzaktan algılama, savunma ve güvenlik gibi
+  konular üzerinde karar verici sistem tasarımında nesne ve
+  örüntü tanıma önemli bir uygulama alanını oluşturur.
+- Bu bölümde örüntü tanıma ve makine öğrenmesi
+  yöntemlerinin 2 boyutlu görüntülerde nasıl
+  kullanılacağının aktarılması hedeflenmektedir.
+
+## Nesne Tanımanın Temel Adımları
+
+- Görüntü işleme açısından bir örüntü belli ortak
+  özellikleri taşıyan, belli kurallara göre dizilime sahip piksel
+  grupları olarak anlaşılabilir.
+- Özellikle nesne tanımada, nesneye ait örüntülerin ortaya
+  çıkarılması nesnenin konumunun tam olarak tespiti
+  açısından önemlidir.
+- Örüntülerin ve nesnelerin görüntü içinde tanınması için
+  bazı temel matematiksel görüntü sunumlarının bilinmesi
+  gerekir
+
+## Görüntü Matrisleri
+
+- İkili ve gri-seviye görüntüler basitçe 2-boyutlu bir matris
+  yapısı şeklinde ifade edilebilirler.
+- RGB, TIFF gibi renkli görüntüleri, birçok banttan oluşan,
+  daha çok katmana sahip görüntüleri yüksek boyutlu (nboyutlu) görüntü matrisleri (veya görüntü küpü) olarak
+  düşünebiliriz.
+
+## Örüntü İfade Şekilleri
+
+- Görüntülerden gerek uzamsal, gerek dönüşüm
+  yöntemleri ile elde edilen elde edilen öznitelikler
+  vektörler şeklinde ifade edilebilir.
+- Vektörün uzunluğu olan d, aynı zamanda görüntüden
+  elde edilen özniteliğin boyutu olarak adlandırılır.
+- Tanımada direkt piksel değerleri kullanılacaksa öznitelik
+  vektör boyutu d=genişlik x yükseklik olur
+
+  <center><image src="./image/Nxdmatris.jpg" width="400"></image></center>
+
+- N adet görüntüden elde edilen öznitelik matrisi
+  (tanımada bu matris kullanılır- eğitim kümesi ve test kümesi ayrı
+  ayrı olmalıdır, eğitim kümesi ile sistem eğitilir, test kümesi ile
+  eğitilen sistemin tanıma performansı değerlendirilir.)
+
+## Nesne ve Örüntü Tanıma İşleminin Bileşenleri
+
+- Temel olarak kamera ve algılayıcılar vasıtasıyla elde edilen
+  görüntüde ilgili nesne ve örüntülerin tanınabilmesi için
+  genel bir şablon olarak izlenmesi gereken basamaklar
+  şunlardır:
+  - Ön İşleme
+  - Özellik Seçimi veya Çıkarımı
+  - Eğiticili (supervised) sınıflandırma veya eğiticisiz (unsupervised)
+    kümele yöntemleri kullanarak model altyapısının kurulumu
+  - Son İşleme
+
+## Ön İşleme
+
+- Nesne veya örüntü tanıma algoritmalarının daha başarılı olabilmesi için
+  görüntülerde bir takım ön işlemlerin yapılması gerekebilir.
+- Gürültü Giderimi: Görüntüdeki gürültünün varlığı oluşturulacak modelin
+  sağlamlığını ve kullanacak sınıflandırma ve kümeleme algoritmalarının başarımını
+  olumsuz olarak etkiler.
+- Süzgeçleme: Gerek görüntülerde gürültü giderimi, yumuşatma, keskinleştirme,
+  kenar çıkarımı için süzgeçlemeden yararlanılır.
+- Normalizasyon: Kullanılan algoritmalar belirli değer aralıklarında daha iyi sonuçlar
+  üretir. Bu yüzden özellik olarak kullanılan parlaklık, renk gibi değerlerin standart
+  sapması ve ortalaması gibi değerler kullanarak veya en büyük özellik değeri 1
+  olacak şekilde bölme yaparak farklı normalizasyon işlemleri gerçekleştirilir.
+  Örneğin standart skor normalizasyonunda ortalama ve standart sapma gibi
+  değerler kullanılır:
+- Aykırı Değer Giderimi: Veri yapısında bulunmaması gereken algılayıcı hatasına veya
+  kayıt hatasına dayanan bütünlüğü bozan verilerin ayrıştırılması işlemidir.
+
+## Öznitelik Seçimi ve Çıkarımı
+
+- Ele alınan görüntü verisinden gerekli ayrıştırıcı özniteliklerin
+  çıkarılması önemli bir işlem adımıdır.
+- Özellik seçimi ve çıkarımında verinin ayrıştırıcılığını kaybetmeden
+  veya mümkünse arttırarak olabildiğince az sayıda öznitelik
+  kullanılarak sınıflandırma ve kümeleme başarımının arttırılması
+  hedeflenir.
+- Özniteliklerin seçilmesi için var olan parlaklık, renk gibi değerler
+  kümesinden seçilmiş alt bir küme kullanılabileceği gibi dönüşüm
+  yöntemleri de kullanılabilir.
+- Özellik çıkarımında dönüşüm yöntemlerinin yansıra, uzamsal yapıdan
+  da yararlanarak çeşitli istatistiksel öznitelikler çıkarılabilir.
+
+## Öznitelik Seçimi ve Çıkarımı
+
+- Özellik çıkarımı ve boyut indirgeme yöntemleri birbiri ile oldukça
+  alakalıdır.
+- Birçok yüksek boyutlu sınıflama ve kümeleme probleminde olduğu
+  gibi görüntüye ait verilerde de kullanılan klasik örüntü tanıma
+  algoritmalarını olumsuz yönde etkilemektedir.
+- Ayrıca eğitim örneklerinin (etiket bilgisi olan örneklerin) sabit
+  olduğu durumlarda boyut arttıkça ayrıştırıcılık gücünün azaldığı
+  gözlemlenir.
+- Bu problemin üstesinden gelebilmek için birçok doğrusal veya
+  doğrusal olmayan boyut indirgeme yönteminden yararlanılmaktadır.
+- Bunun nedeni, boyut indirgeme algoritmalarında veriyi en iyi temsil
+  eden özelliklerin çıkarılarak örüntü tanıma ve makine öğrenmesi
+  algoritmalarında kullanılmasıdır.
+
+## Boyut İndirgeme Yöntemleri
+
+- Boyut indirgeme yöntemlerini doğrusal ve doğrusal olmayan
+  yöntemler olmak üzere iki temel başlıkta inceleyebiliriz.
+- Doğrusal yöntemler veri içindeki doğrusal olarak ifade
+  edilebilen verileri düşük boyutlarda ifade edilebilirken
+  doğrusal olmayan yöntemler veri içerisinde doğrusal olarak
+  ayrıştırılamayan verileri daha düşük boyutlarda ifade
+  edebilme imkânına sahiptir.
+
+  <center><image src="./image/Nxdmatris1.jpg" width="400"></image></center>
+
+## Doğrusal Boyut İndirgeme Yöntemleri
+
+- Temel Bileşen Analizi (Principal Component Analysis)
+- Doğrusal Ayrıştırıcı Analizi (Linear Discriminant Analysis)
+- Bağımsız Bileşen Analizi (Independent Component
+  Analysis)
+- Negatif Olmayan Matris Ayrıştırması (Non-negative
+  matrix factorization)
+
+## Doğrusal Olmayan Boyut İndirgemeYöntemleri
+
+- Bölgesel özellikleri koruyan yöntemler:
+  - Bölgesel Doğrusal Gömü (Local Linear Embedding)
+  - Laplas Özharitalar (Laplacian Eigenmaps)
+  - Hessian LLE
+  - Doğrusal Tanjant Uzay Analizi (LinearTangent Space Analysis)
+- Küresel özellikleri koruyan yöntemler:
+  - Çok Boyutlu Ölçekleme (Multidimensional Scaling)
+  - Isomap
+  - Çekirdek Temel Bileşen Analizi (Kernel PCA)
+  - Çekirdek Doğrusal Ayrıştırıcı Analizi (Kernel LDA)
+  - Yayılma Haritaları (Diffusion Maps)
+
+## Eğiticisiz Öğrenme Yöntemler
+
+- Eğiticisiz öğrenme yöntemleri etiket bilgileri olmaksızın
+  (verinin ne olduğunu bilmeksizin) veride gizli bulunan
+  yapıyı ortaya çıkarmaya çalışır.
+- Eğiticisiz öğrenmede etiket
+  bilgileri olmadığı için veri içindeki gruplaşmalar/ grup
+  yapıları ne kadar iyi temsil edilirse öğrenme o kadar
+  başarılı olur.
+- Birçok kümeleme yöntemi verilerin eğiticisiz
+  biçimde temsil edilebilmesi için kullanılmaktadır.
+- Bu yöntemler şu alt sınıflara ayrıştırılabilir:
+
+## Hiyerarşik Kümeleme
+
+- Hiyerarşik kümelemede veri noktalarının birbirine olan
+  uzaklığına göre iç gruplaşmalar ortaya çıkarılmaya çalışılır.
+- Birbirine yakın/uzak olan noktalar dendrogramlar (öbek
+  ağaçları) vasıtasıyla çeşitli yakınlık/benzerlik ölçütleri esas
+  alınıp, ayrıştırılarak veya birleştirilerek hiyerarşik
+  kümeleme gerçekleştirilir
+- Bu tür kümelemede sıkça kullanılan iki yöntem ise
+  - Tek-bağlantılı kümeleme (Single-linkage)
+  - Tüm-bağlantılı kümeleme’dir (Complete-linkage).
+
+## Veri Dağılımını Esas Alan Kümeleme
+
+- Veri dağılımını esas alan yöntemlerde istatistiksel dağılım
+  modellerinden yararlanılır.
+- Temel amaç çok boyutlu veri
+  içerisindeki kümelerin en uygun dağılım şeklini veren
+  dağılım parametrelerinin belirlenmesidir.
+- Gauss Karışım
+  Modellerine dayanan (Gaussian Mixture Models), beklenti
+  en-büyüklenmesi (Expectation Maximization) yöntemi en
+  bilindik yaklaşımdır.
+- Bu yöntemde kümelerin verideki
+  optimum dağılım uyumluluğu Gauss dağılımı esas alınarak
+  sağlanmaya çalışılır.
+
+## Ağırlık Merkezi Tabanlı Yöntemler
+
+- Ağırlık merkezi tabanlı yöntemlerde öncelikli olarak
+  bulunması istenen küme sayısının algoritmaya giriş olarak
+  verilmesi gerekir.
+- Verilen küme sayısınca başlangıç noktaları
+  rastgele veya önceden belirlenerek uzaklık hesabına göre
+  kümeleme gerçekleştirilir.
+- Kümeleme sonuçları kesin (hard)
+  olabileceği gibi bulanık (fuzzy) olarak da belirlenebilir.
+- En bilinen yöntem olan k-ortalamalar algoritmasında kümeleme
+  sonucu kesin olarak belirlenirken, bulanık c-ortalamalar
+  algoritmasında sonuçlar bulanık olarak (değişik kümelere
+  aidiyet dereceleri verilerek) kümeleme gerçekleştirilir.
+
+## İstatistiksel Veri Yoğunluğuna Dayalı Yöntemler
+
+- Veriyi oluşturan noktaların çok boyutlu uzayda yoğunlaştığı
+  yerleri bulmayı amaçlayan bu yöntem veri yoğunluğuna dayalı
+  yöntemler olarak adlandırılırlar.
+- Kümeler arasındaki sınır
+  geçişlerinde veri yoğunluğunun azaldığı varsayılarak küme
+  sınırları belirlenir.
+- En sık kullanılan yöntemler ise
+  - DBSCAN (Density-based spatial clustering of applications with
+    noise)
+  - OPTICS (Ordering points to identify the clustering structure)’dir.
+
+## Yapay Sinir Ağlarına Dayalı Kümeleme
+
+- Ayrıca yapay sinir ağları kapsamında ele alınabilecek
+  kümeleme yönteleri ise
+  - Öz-düzenlemeli Haritalar (Self Organizing Maps)
+  - Uyarlamalı Rezonans Teorisi (Adaptive ResonanceTheory)’dir.
+
+## Eğiticili Öğrenme Yöntemleri
+
+- Eğiticili öğrenme yöntemlerinde, eğiticisiz yöntemlerden farklı olarak
+  etiketli veriden yararlanılarak model oluşturulmaya çalışılır.
+- Öncelikle olarak modelin oluşturulması için bir ‘eğitim kümesinden’ yararlanılır.
+- Eğitim kümesi aslında verinin yapısını özetleyebilecek olan bir alt kümedir.
+- Oluşturulacak olan modelin en uygun şekilde ayarlanabilmesi için
+  parametre optimizasyonu eğitim kümesi kullanılarak gerçekleştirilir.
+- Daha sonra ‘test’ ve ‘geçerlilik’ kümeleri kullanılarak modelin verimliliği test
+  edilmiş olur.
+- En çok kullanılan eğiticili öğrenme yöntemleri ise ana
+  başlıklar halinde şu şekilde verilebilir
+  - Bayes Sınıflayıcıları
+  - K-EnYakın Komşuluk
+  - Yapay Sinir Ağları
+  - DestekVektör Makineler
+- Başka bir başlık altında ise karışım modelleri ve topluluk sınıflayıcıları da
+  eğiticili öğrenme yöntemleri olarak incelenebilir.
+
+## Takviyeli Öğrenme Yöntemleri
+
+- Eğiticili öğrenme yöntemlerinden farklı olarak, eğitim
+  modeli oluşturulurken her adımda etiket bilgileri sağlayan
+  bir eğitici olmaması durumunda sistem, ödül ve ceza
+  kavramlarında yararlanılarak istenilen modeli en başarılı
+  biçimde oluşturmaya çalışır.
+- Psikolojideki ödül ve ceza
+  kavramları ile ilişkilendirilerek eğitim modeli optimal bir
+  biçimde algoritmik olarak oluşturulur.
+
+## Son İşleme
+
+- Elde edilen sınıflandırma veya kümeleme sonuçlarının
+  iyileştirilmesi için yapılan her türlü işlem son işleme
+  başlığı altında işlenebilir.
+- Son işlemede görüntüdeki
+  uzamsal ilişkilerden yararlanılarak atanmış olan etiket
+  bilgileri tekrar değerlendirilebileceği gibi biçim-bilimsel
+  işlemciler kullanılarak sınıflama veya kümeleme
+  başarımının artırılması amaçlanır
